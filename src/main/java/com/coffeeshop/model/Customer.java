@@ -2,6 +2,7 @@ package com.coffeeshop.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public final class Customer implements CustomerInterface {
         requireNonNull(name, "Name cannot be null");
         this.name = name;
         this.code = UUID.randomUUID().toString();
-        this.stampCards = List.of(new StampCard());
+        this.stampCards = new ArrayList<>(List.of(new StampCard()));
     }
 
     public String getName() {

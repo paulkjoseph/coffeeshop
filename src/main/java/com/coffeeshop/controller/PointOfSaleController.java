@@ -39,7 +39,8 @@ public record PointOfSaleController() implements PointOfSaleControllerInterface 
         return customer;
     }
 
-    @Override public Order createOrder(final Customer customer, final List<Product> products) {
+    @Override
+    public Order createOrder(final Customer customer, final List<Product> products) {
         requireNonNull(customer, "Customer code cannot be null");
         requireNonNull(products, "Products code cannot be null");
 
@@ -58,7 +59,8 @@ public record PointOfSaleController() implements PointOfSaleControllerInterface 
         return order;
     }
 
-    @Override public String createReceipt(final Order order) {
+    @Override
+    public String createReceipt(final Order order) {
         requireNonNull(order, "Order code cannot be null");
 
         final var subtotal = order.products().stream()
@@ -89,7 +91,7 @@ public record PointOfSaleController() implements PointOfSaleControllerInterface 
                 .map(stringListEntry -> {
                     final var product = stringListEntry.getValue().get(0);
                     final var quantity = stringListEntry.getValue().size();
-                    return "%s %s X %s = %s".formatted(product.name(), quantity, product.price().setScale(2, HALF_UP),
+                    return "%s %s X %s = - %s".formatted(product.name(), quantity, product.price().setScale(2, HALF_UP),
                             product.price().multiply(BigDecimal.valueOf(quantity)).setScale(2, HALF_UP));
                 })
                 .collect(joining("\n"));

@@ -1,5 +1,6 @@
 package com.coffeeshop.service;
 
+import static com.coffeeshop.model.StampCard.BONUS_THRESHOLD;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.counting;
@@ -51,15 +52,30 @@ public class CustomerService {
                         collectingAndThen(counting(), Long::intValue)
                 )
         );
+        final int[] newStampCards = { 0 };
         customerStampCard.ifPresentOrElse(
                 stampCard -> {
                     final var currentCountOfStamps = stampCard.getStampCountPerOrder().getOrDefault(order.code(), 0);
-                    customers.get(customerCode)
-                            .updateStampCard(stampCard.getCode(), order.code(),
-                                    currentCountOfStamps + newCountOfStamps);
+                    final var totalCountOfStamps = currentCountOfStamps + newCountOfStamps;
+                    final var updateCountOfStamps =
+                            totalCountOfStamps <= BONUS_THRESHOLD ?
+                                    totalCountOfStamps :
+                                    BONUS_THRESHOLD - currentCountOfStamps;
+                    customers.get(customerCode).updateStampCard(stampCard.getCode(), order.code(), updateCountOfStamps);
+                    newStampCards[0] = totalCountOfStamps - updateCountOfStamps;
                 },
-                () -> customers.get(customerCode).addStampCard(new StampCard(Map.of(order.code(), newCountOfStamps)))
+                () -> {
+                    newStampCards[0] = newCountOfStamps;
+                }
         );
+        final var size = (Math.floorDiv(newStampCards[0], 5) * BONUS_THRESHOLD) + BONUS_THRESHOLD;
+        for (int index = BONUS_THRESHOLD; index <= size; index += BONUS_THRESHOLD) {
+            final var stamps =
+                    index < newStampCards[0] ? BONUS_THRESHOLD : newStampCards[0] - (index - BONUS_THRESHOLD);
+            if (stamps > 0) {
+                customers.get(customerCode).addStampCard(new StampCard(Map.of(order.code(), stamps)));
+            }
+        }
     }
 
     public Optional<Customer> getCustomerByCode(final String code) {

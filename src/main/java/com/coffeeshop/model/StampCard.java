@@ -32,8 +32,12 @@ public final class StampCard implements StampCardInterface {
         return stampCountPerOrder;
     }
 
+    public int getStamps() {
+        return stampCountPerOrder.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
     public boolean isActive() {
-        return stampCountPerOrder.values().size() < BONUS_THRESHOLD;
+        return getStamps() < BONUS_THRESHOLD;
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.coffeeshop.datasource.ProductCatalog;
 import com.coffeeshop.model.Customer;
 import com.coffeeshop.model.Order;
 import com.coffeeshop.model.Product;
+import com.coffeeshop.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -60,18 +61,15 @@ class PointOfSaleControllerTest {
         @Test
         void givenCustomerAndProductsWhenCreateOrderThenReturnOrder() {
             final var customer = controller.createCustomer("Paul Kibe");
-            ;
-            nCopies(20, BACON_ROLL.getProduct());
-            nCopies(20, BACON_ROLL.getProduct());
-            nCopies(20, BACON_ROLL.getProduct());
 
             final var products = new ArrayList<Product>();
             products.addAll(nCopies(10, COFFE_LARGE.getProduct()));
-            products.addAll(nCopies(10, ORANGE_JUICE.getProduct()));
+            products.addAll(nCopies(12, ORANGE_JUICE.getProduct()));
             products.addAll(nCopies(10, BACON_ROLL.getProduct()));
             products.addAll(nCopies(10, EXTRA_MILK.getProduct()));
 
             final var order = controller.createOrder(customer, products);
+            final var stampCards = CustomerService.getInstance().getCustomerByCode(customer.getCode()).orElse(customer).getStampCards();
 
             assertAll("Order",
                     () -> assertNotNull(order),
@@ -79,7 +77,8 @@ class PointOfSaleControllerTest {
                     () -> assertNotNull(order.products()),
                     () -> assertNotNull(order.rebate()),
                     () -> assertEquals(order.products().size(), products.size()),
-                    () -> assertEquals(order.rebate().size(), 5)
+                    () -> assertEquals(order.rebate().size(), 5),
+                    () -> assertEquals(stampCards.size(), 5)
             );
         }
 
