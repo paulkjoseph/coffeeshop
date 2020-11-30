@@ -22,6 +22,7 @@ public final class Customer implements CustomerInterface {
 
     public Customer(final String name) {
         requireNonNull(name, "Name cannot be null");
+
         this.name = name;
         this.code = UUID.randomUUID().toString();
         this.stampCards = new ArrayList<>(List.of(new StampCard()));

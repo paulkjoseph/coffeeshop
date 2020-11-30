@@ -28,7 +28,7 @@ public class Application {
         final var order = pointOfSaleController.createOrder(customer, products);
 
         final var receipt = pointOfSaleController.createReceipt(order);
-        LOGGER.info(receipt);
+        LOGGER.info(receipt.details());
     }
 
 }

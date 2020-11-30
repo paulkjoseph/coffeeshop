@@ -35,6 +35,7 @@ public class CustomerService {
         if (customers.containsKey(customer.getCode())) {
             throw new IllegalArgumentException(String.format("Customer already exist: %s", customer));
         }
+
         customers.put(customer.getCode(), customer);
     }
 
@@ -80,6 +81,7 @@ public class CustomerService {
 
     public Optional<Customer> getCustomerByCode(final String code) {
         requireNonNull(code, "Code cannot be null");
+
         return Optional.ofNullable(customers.get(code));
     }
 }

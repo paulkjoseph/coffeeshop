@@ -45,6 +45,7 @@ public final class StampCard implements StampCardInterface {
         if (!isActive()) {
             throw new IllegalArgumentException(String.format("Stamp card is inactive: %s", code));
         }
+
         final var currentCountOfStamps = stampCountPerOrder.getOrDefault(orderCode, 0);
         stampCountPerOrder.put(orderCode, currentCountOfStamps + countOfStamps);
     }

@@ -15,6 +15,7 @@ import com.coffeeshop.datasource.ReceiptTemplate;
 import com.coffeeshop.model.Customer;
 import com.coffeeshop.model.Order;
 import com.coffeeshop.model.Product;
+import com.coffeeshop.model.Receipt;
 import com.coffeeshop.service.CustomerService;
 import com.coffeeshop.service.OrderService;
 import com.coffeeshop.utils.PromotionRules;
@@ -24,7 +25,7 @@ interface PointOfSaleControllerInterface {
 
     Order createOrder(final Customer customer, final List<Product> products);
 
-    String createReceipt(final Order order);
+    Receipt createReceipt(final Order order);
 }
 
 public record PointOfSaleController() implements PointOfSaleControllerInterface {
@@ -60,7 +61,7 @@ public record PointOfSaleController() implements PointOfSaleControllerInterface 
     }
 
     @Override
-    public String createReceipt(final Order order) {
+    public Receipt createReceipt(final Order order) {
         requireNonNull(order, "Order code cannot be null");
 
         final var subtotal = order.products().stream()
@@ -103,10 +104,13 @@ public record PointOfSaleController() implements PointOfSaleControllerInterface 
         final var footer = ReceiptTemplate.FOOTER.getContent()
                 .formatted(order.customer().getName());
 
-        return """
+        final var receiptDetails = """
                 %s
                 %s
                 %s
                 """.formatted(header, body, footer);
+
+        return new Receipt(BigDecimal.valueOf(subtotal), BigDecimal.valueOf(discount), BigDecimal.valueOf(total),
+                order.products(), order.rebate(), receiptDetails);
     }
 }

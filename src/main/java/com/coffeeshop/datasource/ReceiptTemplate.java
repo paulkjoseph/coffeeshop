@@ -2,6 +2,7 @@ package com.coffeeshop.datasource;
 
 public enum ReceiptTemplate {
     HEADER("""
+            
             ---------------------------------------------------------------
             Charlene's Coffee Corner
             Soodring 6 and 33
@@ -14,6 +15,9 @@ public enum ReceiptTemplate {
             DATE: %s
             ---------------------------------------------------------------
             %s
+            ---------------------------------------------------------------
+            Discount items
+            ---------------------------------------------------------------
             %s
             ---------------------------------------------------------------
             Subtotal: %s
@@ -25,6 +29,7 @@ public enum ReceiptTemplate {
             Customer: %s
             THANKS FOR SHOPPING WITH US
             ---------------------------------------------------------------
+            
             """);
 
     private String content;

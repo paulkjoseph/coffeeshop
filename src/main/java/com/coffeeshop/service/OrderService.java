@@ -26,20 +26,13 @@ public class OrderService {
         return instance;
     }
 
-    public Map<String, List<Order>> getOrders() {
-        return orders;
-    }
-
     public void addOrder(final Order order) {
         requireNonNull(order, "Order cannot be null");
+
         final var customerOrders = orders.getOrDefault(order.customer().getCode(), of());
         List<Order> listOfOrders = new ArrayList<>();
         Stream.of(customerOrders, of(order)).forEach(listOfOrders::addAll);
         orders.put(order.customer().getCode(), listOfOrders);
     }
 
-    public List<Order> getOrdersByCustomerCode(final String code) {
-        requireNonNull(code, "OrderCode cannot be null");
-        return orders.getOrDefault(code, of());
-    }
 }

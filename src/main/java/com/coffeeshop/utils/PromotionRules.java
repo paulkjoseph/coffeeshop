@@ -32,6 +32,5 @@ public enum PromotionRules implements PromotionRulesInterface {
         public List<Product> calculate(final Customer customer, final List<Product> products) {
             return PromotionService.getInstance().calculateExtraPromotion(customer, products);
         }
-
     }
 }
