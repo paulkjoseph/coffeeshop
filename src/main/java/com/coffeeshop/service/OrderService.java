@@ -4,9 +4,11 @@ import static java.util.List.of;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.coffeeshop.model.Order;
@@ -35,4 +37,10 @@ public class OrderService {
         orders.put(order.customer().getCode(), listOfOrders);
     }
 
+    public Optional<Order> getOrderByCode(final String code) {
+        requireNonNull(code, "Code cannot be null");
+
+        return orders.values().stream().flatMap(Collection::stream).filter(order -> order.code().equalsIgnoreCase(code))
+                .findFirst();
+    }
 }
